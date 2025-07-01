@@ -1,7 +1,11 @@
 // src/navigation/MainTabNavigator.tsx
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+<<<<<<< HEAD
 import HomeNavigator from '../home/HomeNavigator'
+=======
+import HomeNavigator from '../home/components/screen/sections/HomeNavigationSection/HomeNavigationSection'
+>>>>>>> 55264d3 (update home)
 import SearchNavigator from '../search/SearchNavigator'
 import LibraryNavigator from '../library/LibraryNavigator'
 import SettingsNavigator from '../settings/SettingsNavigator'
