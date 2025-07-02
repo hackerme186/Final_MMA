@@ -376,7 +376,10 @@ const SearchScreen = () => {
               <TouchableOpacity
                 style={styles.browseCard}
                 activeOpacity={0.85}
-                onPress={() => console.log('Browse category:', cat.name)}
+                onPress={() => router.push({
+                  pathname: '/(tabs)/search/category/[id]',
+                  params: { id: cat.id, name: cat.name }
+                })}
               >
                 {cat.icons?.[0]?.url ? (
                   <Image source={{ uri: cat.icons[0].url }} style={styles.browseImage} />
