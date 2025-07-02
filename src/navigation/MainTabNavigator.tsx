@@ -1,15 +1,9 @@
 // src/navigation/MainTabNavigator.tsx
-import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-<<<<<<< HEAD
-import HomeNavigator from '../home/HomeNavigator'
-=======
-import HomeNavigator from '../home/components/screen/sections/HomeNavigationSection/HomeNavigationSection'
->>>>>>> 55264d3 (update home)
-import SearchNavigator from '../search/SearchNavigator'
-import LibraryNavigator from '../library/LibraryNavigator'
-import SettingsNavigator from '../settings/SettingsNavigator'
 import { Ionicons } from '@expo/vector-icons'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import React from 'react'
+import HomeNavigator from '../home/HomeNavigator'
+import SearchNavigator from '../search/SearchNavigator'
 
 const Tab = createBottomTabNavigator()
 
@@ -24,8 +18,6 @@ export default function MainTabNavigator() {
 
           if (route.name === 'Home') iconName = focused ? 'home' : 'home-outline'
           else if (route.name === 'Search') iconName = focused ? 'search' : 'search-outline'
-          else if (route.name === 'Library') iconName = focused ? 'musical-notes' : 'musical-notes-outline'
-          else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline'
 
           return <Ionicons name={iconName} size={size} color={color} />
         },
@@ -35,8 +27,6 @@ export default function MainTabNavigator() {
     >
       <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Search" component={SearchNavigator} />
-      <Tab.Screen name="Library" component={LibraryNavigator} />
-      <Tab.Screen name="Settings" component={SettingsNavigator} />
     </Tab.Navigator>
   )
 }
