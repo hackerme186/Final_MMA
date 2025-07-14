@@ -1,9 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import SettingsScreen from './SettingsScreen';
-import ProfileScreen from './ProfileScreen';
 import Logout from './LogoutScreen';
-
+import ProfileScreen from './ProfileScreen';
+import SettingsScreen from './SettingsScreen';
 
 export type SettingsStackParamList = {
   SettingsScreen: undefined;

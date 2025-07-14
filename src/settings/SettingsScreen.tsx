@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SettingsStackParamList } from './SettingsNavigator';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LanguageModal from './LanguageModal';
+import { SettingsStackParamList } from './SettingsNavigator';
 
 const SettingsScreen = () => {
   const navigation = useNavigation<StackNavigationProp<SettingsStackParamList>>();
