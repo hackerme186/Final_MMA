@@ -28,8 +28,6 @@ export default function MainTabNavigator() {
     >
       <Tab.Screen name="Home" component={HomeNavigator} />
       <Tab.Screen name="Search" component={SearchNavigator} />
-      <Tab.Screen name="Library" component={LibraryNavigator} />
-      <Tab.Screen name="Settings" component={SettingsNavigator} />
     </Tab.Navigator>
   );
 }
