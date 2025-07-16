@@ -1,14 +1,14 @@
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native'
 import { useAuth } from '../context/AuthContext'
 
@@ -42,7 +42,7 @@ export default function SignupScreen() {
       Alert.alert(
         'Success',
         'Account created successfully! Please check your email to verify your account.',
-        [{ text: 'OK', onPress: () => router.push('/auth/login') }]
+        [{ text: 'OK', onPress: () => router.push('/(auth)/login') }]
       )
     } catch (error: any) {
       Alert.alert('Error', error.message)
@@ -96,7 +96,7 @@ export default function SignupScreen() {
 
           <TouchableOpacity
             style={styles.linkButton}
-            onPress={() => router.push('/auth/login')}
+            onPress={() => router.push('/(auth)/login')}
           >
             <Text style={styles.linkText}>
               Already have an account? Sign in

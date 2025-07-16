@@ -1,4 +1,5 @@
-  import React, { useState } from 'react'
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -8,26 +9,61 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native'
-import { useAuth } from '../context/AuthContext'
+} from 'react-native';
+import { useAuth } from '../context/AuthContext';
 
-export default function LoginScreen({ navigation }: any) {
+interface SupabaseAuthError {
+  message: string;
+  status?: number;
+}
+
+function validateEmail(email: string): boolean {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+function validatePassword(password: string): boolean {
+  // At least 6 chars, 1 letter, 1 number
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password);
+}
+
+export default function SignupScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
+  const { signUp } = useAuth()
+  const router = useRouter()
 
-  const handleLogin = async () => {
-    if (!email || !password) {
+  const handleSignUp = async () => {
+    if (!email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields')
+      return
+    }
+    if (!validateEmail(email)) {
+      Alert.alert('Error', 'Invalid email address')
+      return
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match')
+      return
+    }
+    if (!validatePassword(password)) {
+      Alert.alert('Error', 'Password must be at least 6 characters, include at least 1 letter and 1 number')
       return
     }
 
     setLoading(true)
     try {
-      await signIn(email, password)
-    } catch (error: any) {
-      Alert.alert('Error', error.message)
+      await signUp(email, password)
+      Alert.alert(
+        'Success',
+        'Account created successfully! Please check your email to verify your account.',
+        [{ text: 'OK', onPress: () => router.push('/(auth)/login') }]
+      )
+    } catch (error) {
+      const err = error as SupabaseAuthError;
+      Alert.alert('Error', err.message || 'Unknown error')
     } finally {
       setLoading(false)
     }
@@ -39,8 +75,8 @@ export default function LoginScreen({ navigation }: any) {
       style={styles.container}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Welcome to MeloStream</Text>
-        <Text style={styles.subtitle}>Sign in to your account</Text>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Join MeloStream today</Text>
 
         <View style={styles.form}>
           <TextInput
@@ -58,23 +94,30 @@ export default function LoginScreen({ navigation }: any) {
             onChangeText={setPassword}
             secureTextEntry
           />
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          />
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={handleLogin}
+            onPress={handleSignUp}
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Creating account...' : 'Sign Up'}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.linkButton}
-            onPress={() => navigation.navigate('SignUp')}
+            onPress={() => router.push('/(auth)/login')}
           >
             <Text style={styles.linkText}>
-              Don&apos;t have an account? Sign up
+              Already have an account? Sign in
             </Text>
           </TouchableOpacity>
         </View>
