@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "../../../../components/ui/card";
-import { ScrollArea, ScrollBar } from "../../../../components/ui/scroll-area";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
 
 export const UserGreetingSection = (): JSX.Element => {
   // Playlist data for mapping
@@ -62,7 +62,6 @@ export const UserGreetingSection = (): JSX.Element => {
             </Card>
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </section>
   );

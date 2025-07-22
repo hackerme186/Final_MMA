@@ -1,5 +1,19 @@
+import * as AuthSession from 'expo-auth-session';
 import { supabase } from '../../supabase';
 import { User } from '../types';
+
+const CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID';
+const REDIRECT_URI = AuthSession.makeRedirectUri();
+const SCOPES = ['user-read-private', 'user-read-email', 'user-top-read', 'playlist-read-private'];
+const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${SCOPES.join('%20')}`;
+
+export async function authenticateWithSpotify() {
+  const result = await AuthSession.startAsync({ authUrl: AUTH_URL });
+  if (result.type === 'success' && result.params.access_token) {
+    return result.params.access_token;
+  }
+  throw new Error('Spotify authentication failed');
+}
 
 export interface AuthResponse {
   user: User | null;

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollArea, ScrollBar } from "../../../../components/ui/scroll-area";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
 
 export const NewReleasesSection = (): JSX.Element => {
   // Define categories data for mapping
@@ -29,7 +29,6 @@ export const NewReleasesSection = (): JSX.Element => {
             </button>
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>
   );

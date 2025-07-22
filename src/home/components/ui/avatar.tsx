@@ -1,24 +1,22 @@
-"use client";
-
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface AvatarProps {
-  src?: string
-  alt?: string
-  className?: string
+  src?: string;
+  alt?: string;
+  style?: ViewStyle | ViewStyle[];
 }
 
-export function Avatar({ src, alt, className }: AvatarProps) {
+export default function Avatar({ src, alt, style }: AvatarProps) {
   return (
-    <View style={[styles.avatar, className]}>
+    <View style={[styles.avatar, style]}>
       {src ? (
         <Image source={{ uri: src }} style={styles.image} />
       ) : (
         <View style={styles.placeholder} />
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -37,4 +35,4 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#333',
   },
-})
+});

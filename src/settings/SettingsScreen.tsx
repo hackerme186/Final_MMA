@@ -1,13 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LanguageModal from './LanguageModal';
-import { SettingsStackParamList } from './SettingsNavigator';
 
 const SettingsScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<SettingsStackParamList>>();
+  const router = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
   const [languages, setLanguages] = useState<string[]>(['English']);
 
@@ -17,7 +15,7 @@ const SettingsScreen = () => {
 
       <TouchableOpacity
         style={styles.settingItem}
-        onPress={() => navigation.navigate('ProfileScreen')}
+        onPress={() => router.push('/settings/profile')}
       >
         <View>
           <Text style={styles.label}>Profile</Text>
@@ -45,17 +43,15 @@ const SettingsScreen = () => {
         <Ionicons name="chevron-forward" size={20} color="gray" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.settingItem}>
-        <View>
-          <Text style={styles.label}>Download Quality</Text>
-          <Text style={styles.value}>High</Text>
-        </View>
-        <Ionicons name="chevron-forward" size={20} color="gray" />
-      </TouchableOpacity>
+      <View>
+        <Text style={styles.label}>Download Quality</Text>
+        <Text style={styles.value}>High</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color="gray" />
 
       <TouchableOpacity
         style={[styles.settingItem, styles.logoutItem]}
-        onPress={() => navigation.navigate('Logout')}
+        onPress={() => router.push('/settings/logout')}
       >
         <Text style={[styles.label, { color: 'red' }]}>Logout</Text>
         <Ionicons name="exit-outline" size={20} color="red" />

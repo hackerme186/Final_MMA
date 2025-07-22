@@ -1,35 +1,25 @@
-import React from 'react'
-import { ScrollView, StyleSheet, ViewStyle } from 'react-native'
+import React from 'react';
+import { ScrollView, ScrollViewProps, StyleSheet, ViewStyle } from 'react-native';
 
-interface ScrollAreaProps {
-  children: React.ReactNode
-  style?: ViewStyle
-  horizontal?: boolean
-  showsVerticalScrollIndicator?: boolean
-  showsHorizontalScrollIndicator?: boolean
+interface ScrollAreaProps extends Omit<ScrollViewProps, 'style'> {
+  children: React.ReactNode;
+  style?: ViewStyle;
 }
 
-export function ScrollArea({
-  children,
-  style,
-  horizontal = false,
-  showsVerticalScrollIndicator = false,
-  showsHorizontalScrollIndicator = false,
-}: ScrollAreaProps) {
+export function ScrollArea({ children, style, ...props }: ScrollAreaProps) {
   return (
-    <ScrollView
-      style={[styles.container, style]}
-      horizontal={horizontal}
-      showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-      showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
-    >
+    <ScrollView style={[styles.container, style]} {...props}>
       {children}
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-})
+});
+
+// Nếu có ScrollBar, export như sau:
+// export { ScrollArea, ScrollBar };
+// Nếu không có ScrollBar, chỉ export ScrollArea:

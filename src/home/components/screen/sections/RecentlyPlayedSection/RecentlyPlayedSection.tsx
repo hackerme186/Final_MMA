@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollArea, ScrollBar } from "../../../../components/ui/scroll-area";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
 
 export const RecentlyPlayedSection = (): JSX.Element => {
   // Data for mixes that can be mapped over
@@ -76,7 +76,6 @@ export const RecentlyPlayedSection = (): JSX.Element => {
             </div>
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </section>
   );

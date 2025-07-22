@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
-import { ScrollArea, ScrollBar } from "../../../../components/ui/scroll-area";
+import { ScrollArea } from "../../../../components/ui/scroll-area";
 
 export const SearchSection = (): JSX.Element => {
   // Data for recently played items
@@ -97,7 +97,6 @@ export const SearchSection = (): JSX.Element => {
             </div>
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </section>
   );

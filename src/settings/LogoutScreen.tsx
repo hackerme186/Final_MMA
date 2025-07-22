@@ -1,16 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SettingsStackParamList } from './SettingsNavigator';
 
 const Logout = () => {
-  const navigation = useNavigation<StackNavigationProp<SettingsStackParamList>>();
+  const router = useRouter();
 
   const handleLogout = () => {
     // TODO: Clear tokens or session here
-    navigation.popToTop(); // or navigate to login screen
+    router.replace('/(auth)/login'); // hoặc route phù hợp
   };
 
   return (
@@ -22,7 +20,7 @@ const Logout = () => {
       <Text style={styles.title}>Are you sure you want to logout?</Text>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
 

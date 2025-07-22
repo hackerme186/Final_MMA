@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -23,7 +23,7 @@ interface SearchResult {
 const RECENT_KEY = 'recent_searches';
 
 export default function SearchDetailScreen() {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -80,7 +80,7 @@ export default function SearchDetailScreen() {
     <View style={styles.container}>
       {/* Header với nút back và input search */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <MaterialIcons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
         <TextInput

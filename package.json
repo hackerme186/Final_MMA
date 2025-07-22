@@ -29,6 +29,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "expo": "~53.0.11",
+    "expo-auth-session": "^6.2.1",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",
     "expo-font": "~13.3.1",

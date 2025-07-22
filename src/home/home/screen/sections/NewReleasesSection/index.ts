@@ -1,1 +1,0 @@
-export { NewReleasesSection } from "./NewReleasesSection";

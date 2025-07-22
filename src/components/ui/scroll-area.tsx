@@ -1,6 +1,6 @@
 import * as React from "react"
 import { ScrollView } from "react-native"
-import { cn } from "../../home/home/lib/utils"
+import { cn } from "./utils"
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollView>,
