@@ -22,52 +22,34 @@ function validateEmail(email: string): boolean {
   return re.test(email);
 }
 
-function validatePassword(password: string): boolean {
-  // At least 6 chars, 1 letter, 1 number
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password);
-}
+export default function LoginScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth(); 
+  const router = useRouter();
 
-export default function SignupScreen() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const { signUp } = useAuth()
-  const router = useRouter()
-
-  const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields')
-      return
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
     }
     if (!validateEmail(email)) {
-      Alert.alert('Error', 'Invalid email address')
-      return
-    }
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match')
-      return
-    }
-    if (!validatePassword(password)) {
-      Alert.alert('Error', 'Password must be at least 6 characters, include at least 1 letter and 1 number')
-      return
+      Alert.alert('Error', 'Invalid email address');
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await signUp(email, password)
-      Alert.alert(
-        'Success',
-        'Account created successfully! Please check your email to verify your account.',
-        [{ text: 'OK', onPress: () => router.push('/(auth)/login') }]
-      )
+      await signIn(email, password);
+      router.push('/(tabs)/home'); 
     } catch (error) {
       const err = error as SupabaseAuthError;
-      Alert.alert('Error', err.message || 'Unknown error')
+      Alert.alert('Error', err.message || 'Login failed');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -75,8 +57,8 @@ export default function SignupScreen() {
       style={styles.container}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join MeloStream today</Text>
+        <Text style={styles.title}>Login</Text>
+        <Text style={styles.subtitle}>Welcome back to MeloStream</Text>
 
         <View style={styles.form}>
           <TextInput
@@ -94,36 +76,29 @@ export default function SignupScreen() {
             onChangeText={setPassword}
             secureTextEntry
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={handleSignUp}
+            onPress={handleLogin}
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? 'Creating account...' : 'Sign Up'}
+              {loading ? 'Logging in...' : 'Login'}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.linkButton}
-            onPress={() => router.push('/(auth)/login')}
+            onPress={() => router.push('/(auth)/signup')}
           >
             <Text style={styles.linkText}>
-              Already have an account? Sign in
+              Don't have an account? Sign up
             </Text>
           </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -182,4 +157,4 @@ const styles = StyleSheet.create({
     color: '#1DB954',
     fontSize: 14,
   },
-})
+});
