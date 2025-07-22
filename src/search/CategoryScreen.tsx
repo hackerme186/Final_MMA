@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSpotifyToken } from '../hooks/useSpotifyToken';
 
 export default function CategoryScreen() {
@@ -38,7 +38,7 @@ export default function CategoryScreen() {
   if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color="#1db954" size="large" />;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
@@ -67,7 +67,7 @@ export default function CategoryScreen() {
           contentContainerStyle={{ padding: 12, paddingTop: 24 }}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
