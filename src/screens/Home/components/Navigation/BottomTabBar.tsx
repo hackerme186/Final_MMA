@@ -11,7 +11,7 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeTab, onTabPres
   <View style={{ flexDirection: 'row', backgroundColor: '#181818', height: 60, borderTopColor: '#282828', borderTopWidth: 1 }}>
     <TabIcon name="home-outline" tab="Home" activeTab={activeTab} onTabPress={onTabPress} />
     <TabIcon name="search-outline" tab="Search" activeTab={activeTab} onTabPress={onTabPress} />
-    <TabIcon name="library-outline" tab="Library" activeTab={activeTab} onTabPress={onTabPress} />
+    <TabIcon name="settings-outline" tab="Settings" activeTab={activeTab} onTabPress={onTabPress} />
   </View>
 );
 
