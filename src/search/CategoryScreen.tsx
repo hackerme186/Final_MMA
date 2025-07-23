@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+// import { useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSpotifyToken } from '../hooks/useSpotifyToken';
 
@@ -8,15 +9,20 @@ export default function CategoryScreen() {
   const { name } = useLocalSearchParams();
   const router = useRouter();
   const { token } = useSpotifyToken();
-  const [albums, setAlbums] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  // const [albums, setAlbums] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState('');
+
+  // Mock data
+  const albums: any[] = [];
+  const loading = false;
+  const error = '';
 
   useEffect(() => {
     if (!token) return;
-    setLoading(true);
-    setError('');
-    setAlbums([]);
+    // setLoading(true);
+    // setError('');
+    // setAlbums([]);
     fetch('https://api.spotify.com/v1/browse/new-releases?limit=20', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -26,13 +32,17 @@ export default function CategoryScreen() {
       })
       .then(data => {
         if (!data.albums?.items || data.albums.items.length === 0) {
-          setError('Không có album mới phát hành.');
+          // setError('Không có album mới phát hành.');
         } else {
-          setAlbums(data.albums.items);
+          // setAlbums(data.albums.items);
         }
       })
-      .catch(e => setError(e.message || 'Đã xảy ra lỗi khi lấy dữ liệu album.'))
-      .finally(() => setLoading(false));
+      .catch(e => {
+        // setError(e.message || 'Đã xảy ra lỗi khi lấy dữ liệu album.')
+      })
+      .finally(() => {
+        // setLoading(false)
+      });
   }, [token]);
 
   if (loading) return <ActivityIndicator style={{ marginTop: 40 }} color="#1db954" size="large" />;

@@ -66,6 +66,54 @@ export interface LikedSong {
   song?: Song;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  color: string;
+  icon?: string;
+  created_at: string;
+}
+
+export interface Follow {
+  id: string;
+  user_id: string;
+  artist_id: string;
+  followed_at: string;
+  artist?: Artist;
+}
+
+export interface Download {
+  id: string;
+  user_id: string;
+  song_id: string;
+  file_path?: string;
+  file_size?: number;
+  download_quality: string;
+  downloaded_at: string;
+  song?: Song;
+}
+
+export interface SongRating {
+  id: string;
+  user_id: string;
+  song_id: string;
+  rating: number;
+  review?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ListeningHistory {
+  id: string;
+  user_id: string;
+  song_id: string;
+  duration_listened: number;
+  completed: boolean;
+  device_type?: string;
+  played_at: string;
+}
+
 export interface Artist {
   id: string;
   name: string;

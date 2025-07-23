@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 
 interface AppContextType {
   theme: 'light' | 'dark';
@@ -12,9 +12,14 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [language, setLanguageState] = useState<'en' | 'vi'>('en');
-  const [isLoading, setIsLoading] = useState(false);
+  // const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  // const [language, setLanguageState] = useState<'en' | 'vi'>('en');
+  // const [isLoading, setIsLoading] = useState(false);
+
+  // Mock data
+  const theme = 'dark';
+  const language = 'en';
+  const isLoading = false;
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));

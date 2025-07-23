@@ -38,3 +38,4 @@ const Switch = React.forwardRef<React.ElementRef<typeof View>, SwitchProps>(
 Switch.displayName = "Switch"
 
 export { Switch }
+
