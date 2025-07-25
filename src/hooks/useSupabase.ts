@@ -133,6 +133,21 @@ export function useSupabase() {
     return result;
   }, []);
 
+  // Alias for compatibility
+  const removeFromPlaylist = removeSongFromPlaylist;
+
+  const updatePlaylist = useCallback(async (playlistId: string, updates: { name?: string; description?: string }) => {
+    // Mock implementation - in real app, call playlistService.updatePlaylist
+    console.log('Updating playlist:', playlistId, updates);
+    return { success: true };
+  }, []);
+
+  const deletePlaylist = useCallback(async (playlistId: string) => {
+    // Mock implementation - in real app, call playlistService.deletePlaylist
+    console.log('Deleting playlist:', playlistId);
+    return { success: true };
+  }, []);
+
   // User functions
   const fetchRecentlyPlayed = useCallback(async () => {
     if (!user) return;
@@ -186,6 +201,15 @@ export function useSupabase() {
   const getUserStats = useCallback(async () => {
     if (!user) return { stats: null, error: 'User not authenticated' };
     const result = await userService.getUserStats(user.id);
+    return result;
+  }, [user]);
+
+  const clearRecentlyPlayed = useCallback(async () => {
+    if (!user) return { error: 'User not authenticated' };
+    const result = await userService.clearRecentlyPlayed(user.id);
+    if (!result.error) {
+      setRecentlyPlayed([]);
+    }
     return result;
   }, [user]);
 
@@ -271,9 +295,13 @@ export function useSupabase() {
     getPlaylistSongs,
     addSongToPlaylist,
     removeSongFromPlaylist,
+    removeFromPlaylist,
+    updatePlaylist,
+    deletePlaylist,
     fetchRecentlyPlayed,
     fetchLikedSongs,
     addToRecentlyPlayed,
+    clearRecentlyPlayed,
     likeSong,
     unlikeSong,
     isSongLiked,

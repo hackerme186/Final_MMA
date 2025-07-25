@@ -1,113 +1,167 @@
-import React, { createContext, useContext, useState } from 'react';
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  duration: number;
-  url: string;
-  artwork?: string;
-}
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { audioService, AudioStatus } from '../services/audioService';
+import { useQueueStore } from '../store/queueStore';
+import { Track } from '../types/library';
 
 interface PlayerContextType {
-  currentSong: Song | null;
+  currentTrack: Track | null;
   isPlaying: boolean;
-  queue: Song[];
-  currentIndex: number;
-  play: (song: Song) => void;
-  pause: () => void;
-  resume: () => void;
-  stop: () => void;
-  next: () => void;
-  previous: () => void;
-  addToQueue: (song: Song) => void;
-  removeFromQueue: (index: number) => void;
-  clearQueue: () => void;
+  isLoading: boolean;
+  position: number;
+  duration: number;
+  volume: number;
+  
+  // Actions
+  playTrack: (track: Track) => Promise<void>;
+  playPause: () => Promise<void>;
+  stop: () => Promise<void>;
+  seekTo: (position: number) => Promise<void>;
+  setVolume: (volume: number) => Promise<void>;
+  nextTrack: () => Promise<void>;
+  previousTrack: () => Promise<void>;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
-export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const [currentSong, setCurrentSong] = useState<Song | null>(null);
+interface PlayerProviderProps {
+  children: ReactNode;
+}
+
+export function PlayerProvider({ children }: PlayerProviderProps) {
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [queue, setQueue] = useState<Song[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolumeState] = useState(1.0);
+  const [hasEnded, setHasEnded] = useState(false);
 
-  const play = (song: Song) => {
-    setCurrentSong(song);
-    setIsPlaying(true);
-    // Add to queue if not already there
-    if (!queue.find(s => s.id === song.id)) {
-      setQueue(prev => [...prev, song]);
-      setCurrentIndex(queue.length);
+  const currentQueue = useQueueStore((state) => state.currentQueue);
+  const currentIndex = useQueueStore((state) => state.currentIndex);
+  const queueNextTrack = useQueueStore((state) => state.nextTrack);
+  const queuePreviousTrack = useQueueStore((state) => state.previousTrack);
+
+  useEffect(() => {
+    // Setup audio status callback
+    audioService.setStatusUpdateCallback((status: AudioStatus) => {
+      setIsPlaying(status.isPlaying);
+      setPosition(status.position);
+      setDuration(status.duration);
+      setVolumeState(status.volume);
+    });
+
+    return () => {
+      audioService.cleanup();
+    };
+  }, []);
+
+  // Auto-play next track when current track ends
+  useEffect(() => {
+    if (duration > 0 && position >= duration - 1000 && isPlaying && !hasEnded) {
+      setHasEnded(true);
+      // Use setTimeout to prevent infinite loop
+      setTimeout(() => {
+        nextTrack();
+      }, 100);
+    }
+  }, [position, duration, isPlaying, hasEnded]);
+
+  const playTrack = async (track: Track) => {
+    try {
+      setIsLoading(true);
+      setHasEnded(false); // Reset end flag for new track
+      await audioService.loadTrack(track);
+      await audioService.play();
+      setCurrentTrack(track);
+    } catch (error) {
+      console.error('Failed to play track:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const pause = () => {
-    setIsPlaying(false);
-  };
-
-  const resume = () => {
-    setIsPlaying(true);
-  };
-
-  const stop = () => {
-    setIsPlaying(false);
-    setCurrentSong(null);
-  };
-
-  const next = () => {
-    if (currentIndex < queue.length - 1) {
-      const nextIndex = currentIndex + 1;
-      setCurrentIndex(nextIndex);
-      setCurrentSong(queue[nextIndex]);
+  const playPause = async () => {
+    try {
+      if (isPlaying) {
+        await audioService.pause();
+      } else {
+        await audioService.play();
+      }
+    } catch (error) {
+      console.error('Failed to play/pause:', error);
     }
   };
 
-  const previous = () => {
-    if (currentIndex > 0) {
-      const prevIndex = currentIndex - 1;
-      setCurrentIndex(prevIndex);
-      setCurrentSong(queue[prevIndex]);
+  const stop = async () => {
+    try {
+      await audioService.stop();
+      setCurrentTrack(null);
+      setPosition(0);
+    } catch (error) {
+      console.error('Failed to stop:', error);
     }
   };
 
-  const addToQueue = (song: Song) => {
-    setQueue(prev => [...prev, song]);
-  };
-
-  const removeFromQueue = (index: number) => {
-    setQueue(prev => prev.filter((_, i) => i !== index));
-    if (index < currentIndex) {
-      setCurrentIndex(prev => prev - 1);
+  const seekTo = async (newPosition: number) => {
+    try {
+      await audioService.seekTo(newPosition);
+    } catch (error) {
+      console.error('Failed to seek:', error);
     }
   };
 
-  const clearQueue = () => {
-    setQueue([]);
-    setCurrentIndex(-1);
-    setCurrentSong(null);
-    setIsPlaying(false);
+  const setVolume = async (newVolume: number) => {
+    try {
+      await audioService.setVolume(newVolume);
+      setVolumeState(newVolume);
+    } catch (error) {
+      console.error('Failed to set volume:', error);
+    }
   };
 
-  const value = {
-    currentSong,
+  const nextTrack = React.useCallback(async () => {
+    if (currentQueue.length > 0) {
+      queueNextTrack();
+      const nextIndex = (currentIndex + 1) % currentQueue.length;
+      const nextTrackItem = currentQueue[nextIndex];
+      if (nextTrackItem) {
+        await playTrack(nextTrackItem);
+      }
+    }
+  }, [currentQueue, currentIndex, queueNextTrack]);
+
+  const previousTrack = React.useCallback(async () => {
+    if (currentQueue.length > 0) {
+      queuePreviousTrack();
+      const prevIndex = currentIndex > 0 ? currentIndex - 1 : currentQueue.length - 1;
+      const prevTrackItem = currentQueue[prevIndex];
+      if (prevTrackItem) {
+        await playTrack(prevTrackItem);
+      }
+    }
+  }, [currentQueue, currentIndex, queuePreviousTrack]);
+
+  const value: PlayerContextType = {
+    currentTrack,
     isPlaying,
-    queue,
-    currentIndex,
-    play,
-    pause,
-    resume,
+    isLoading,
+    position,
+    duration,
+    volume,
+    playTrack,
+    playPause,
     stop,
-    next,
-    previous,
-    addToQueue,
-    removeFromQueue,
-    clearQueue,
+    seekTo,
+    setVolume,
+    nextTrack,
+    previousTrack,
   };
 
-  return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
+  return (
+    <PlayerContext.Provider value={value}>
+      {children}
+    </PlayerContext.Provider>
+  );
 }
 
 export function usePlayer() {
